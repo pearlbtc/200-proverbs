@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#7a5230" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="千古谚语200句" />
+<title>千古谚语200句，道尽老祖宗的智慧</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">千古谚语200句</div>
+    <div class="sub">老祖宗的智慧 · 每日一练</div>
+  </header>
+
+  <main id="view" class="view"><!-- 动态渲染 --></main>
+
+  <nav class="tabbar">
+    <button class="tab" data-tab="lib"><span class="ic">📚</span><span>谚语成语库</span></button>
+    <button class="tab active" data-tab="study"><span class="ic">📖</span><span>学习</span></button>
+    <button class="tab" data-tab="fav"><span class="ic">⭐</span><span>收藏</span></button>
+    <button class="tab" data-tab="quiz"><span class="ic">🎯</span><span>自测</span></button>
+    <button class="tab" data-tab="me"><span class="ic">🏆</span><span>战绩</span></button>
+  </nav>
+
+  <!-- 自测通过奖励弹层 -->
+  <div class="reward-overlay" id="rewardOverlay">
+    <div class="reward-card">
+      <div class="reward-emoji" id="rewardEmoji">🍦</div>
+      <div class="reward-title">真厉害！</div>
+      <div class="reward-score" id="rewardScore"></div>
+      <div class="reward-sub">奖励自己：<span id="rewardName">冰淇淋</span></div>
+      <div class="reward-actions">
+        <button class="btn btn-primary" id="rewardBtn">继续挑战 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 数据先加载，再加载逻辑；file:// 协议下不能加 crossorigin，否则同目录脚本会被 CORS 拒绝。?v=N 每次发布+1，绕过 GitHub Pages 的 10 分钟 max-age=600 HTTP 缓存。 -->
+  <script src="data.js?v=1"></script>
+  <script src="app.js?v=1"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").then(function (reg) {
+          // 新 SW 接管后自动刷新一次，确保用户立刻拿到最新代码
+          if (reg.waiting) { reg.waiting.postMessage("skipWaiting"); }
+          reg.addEventListener("updatefound", function () {
+            var nw = reg.installing;
+            if (nw) nw.addEventListener("statechange", function () {
+              if (nw.state === "installed" && navigator.serviceWorker.controller) {
+                nw.postMessage("skipWaiting");
+              }
+            });
+          });
+        }).catch(function (e) { console.warn("SW 注册失败:", e); });
+        // SW 控制权变化时自动刷新
+        navigator.serviceWorker.addEventListener("controllerchange", function () {
+          window.location.reload();
+        });
+      });
+    }
+  </script>
+</body>
+</html>
