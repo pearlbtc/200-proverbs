@@ -1,5 +1,5 @@
 /* ============================================================
- * 600个绝美的诗词成语在线学习小工具（纯前端 H5 原型）
+ * 千古智慧200句在线学习小工具（纯前端 H5）
  * 形态：先原型后全栈。当前用 localStorage + 内存数据；
  *       api 层已抽象，后续把方法体换成 fetch 即可平滑升级为全栈。
  * 登录：游客占位，微信/手机号接口预留（见 me 页占位按钮）。
@@ -50,7 +50,7 @@ try { (function () {
     return 100 + 40 * (round - ROUND_TABLE.length);
   }
   var GROUP_SIZE = 10;         // 每日学习一组条数
-  var LIB_PAGE_SIZE = 30;      // 诗词成语库每页条数
+  var LIB_PAGE_SIZE = 30;      // 词句库每页条数
   var EASY_BANK_CAP = 50;      // 第一轮常用词池上限（便于按需扩充）
 
   var ENTRIES = window.ENTRIES || [];
@@ -82,6 +82,11 @@ try { (function () {
   };
 
   /* ---------------- 状态（localStorage） ---------------- */
+  // ★通用化：默认勾选「当前产品的全部文集」，不写死任何产品的 COLL_ID。
+  // 写死旧产品 ID（如 cy）会让新产品的词库显示「共 0 条 / 没有匹配的词条」。
+  function defaultCollections() {
+    return COLLECTIONS.map(function (c) { return c.id; });
+  }
   function defaultState() {
     return {
       learnedToday: { date: "", ids: [] },
@@ -89,7 +94,7 @@ try { (function () {
       favorites: [],         // [entryId]
       round: 1,
       best: {},              // {roundNo: 最好百分比}
-      collections: ["cy"],   // 勾选的文集
+      collections: defaultCollections(),   // 勾选的文集（动态取当前产品 COLL_ID）
       lastView: "study",     // 上次所在 tab（自动接续用）
       studyIdx: 0            // 学习栏当前条目索引（自动接续用）
     };
@@ -138,7 +143,7 @@ try { (function () {
   }
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   function selectedEntries() {
-    var cols = (state.collections && state.collections.length) ? state.collections : ["cy"];
+    var cols = (state.collections && state.collections.length) ? state.collections : defaultCollections();
     return api.getEntries(cols);
   }
 
@@ -459,7 +464,7 @@ try { (function () {
     }
   }
 
-  /* ---------------- 诗词成语库（第一栏） ---------------- */
+  /* ---------------- 词句库（第一栏） ---------------- */
   var libPage = 1, libCat = "all", libQ = "";
   function libFiltered() {
     return selectedEntries().filter(function (e) {
@@ -482,8 +487,8 @@ try { (function () {
     var slice = list.slice(start, start + LIB_PAGE_SIZE);
 
     var html = "";
-    html += '<div class="progress">诗词成语库 · 共 ' + list.length + " 条</div>";
-    html += '<div class="lib-cover"><img src="assets/cover.jpg" alt="600个绝美的诗词成语，每一个背后都有故事" /></div>';
+    html += '<div class="progress">千古智慧200句 · 共 ' + list.length + " 条</div>";
+    html += '<div class="lib-cover"><img src="assets/cover.jpg" alt="千古智慧200句，道尽老祖宗的智慧" /></div>';
     html += '<div class="lib-search"><input id="libQ" placeholder="搜索词条 / 释义 / 出处…" value="' + libQ.replace(/"/g, "&quot;") + '" /></div>';
     html += '<div class="lib-cats" id="libCats">';
     html += '<span class="lib-cat' + (libCat === "all" ? " on" : "") + '" data-c="all">全部</span>';

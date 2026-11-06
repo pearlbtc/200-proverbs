@@ -1,2 +1,4 @@
 node_modules/
 package-lock.json
+generated-images/
+核查表.md

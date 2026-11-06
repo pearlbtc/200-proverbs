@@ -55,29 +55,124 @@ def cat_name(h2):
 cover_img = "cover.jpg"
 
 
-# ---------- 多音字纠错表（★示例，新项目必须按新词条自建）----------
+# ---------- 多音字纠错表（本产品 96 个四字成语，逐条人工核定）----------
+# 核定方法：① pypinyin 词组模式全量注音 → ② 与逐字模式交叉比对，检出 15 处多音字/变调风险点
+#          → ③ 高风险项查权威词典核定 → ④ 全表写死，PDF 不再调用自动注音。
+# 权威修正（有信源）：
+#   一鸣惊人 yī míng jīng rén —— 词典标「一」本调，pypinyin 变调给 yì（已纠）
+#   鹿死谁手 lù sǐ shuí shǒu —— 教育部《成语典》注「谁」文言音 shuí，pypinyin 给 shéi（已纠）
+#   叶公好龙 yè gōng hào lóng —— 大陆 1963/1985《普通话异读词审音表》定 yè；
+#                                台湾教育部成语典注 shè（旧读/该地区标准），本产品面向大陆故取 yè
+# 其余多音字（中 zhòng／弹 tán／还 huán／塞 sài／好 hào／曾参 zēng shēn／朝 zhāo／
+#   差 chā／量 liàng／卷 juàn／为 wéi／华 huá／乘 chéng／当 dāng／曲 qū／兴 xīng）
+#   均已按成语词典通行读音核定，见下表。
 PINYIN_OVERRIDE = {
-    # —— 以下为示例条目，演示「键=词条原文(与 .md 中 term 完全一致) → 值=人工核定拼音」——
-    "春风又绿江南岸，明月何时照我还": "chūn fēng yòu lǜ jiāng nán àn ， míng yuè hé shí zhào wǒ huán",
-    "人生不相见，动如参与商": "rén shēng bù xiāng jiàn ， dòng rú shēn yǔ shāng",
-    "千磨万击还坚劲，任尔东西南北风": "qiān mó wàn jī hái jiān jìng ， rèn ěr dōng xī nán běi fēng",
-    "居高声自远，非是藉秋风": "jū gāo shēng zì yuǎn ， fēi shì jiè qiū fēng",
-    "关关雎鸠，在河之洲。窈窕淑女，君子好逑": "guān guān jū jiū ， zài hé zhī zhōu 。 yǎo tiǎo shū nǚ ， jūn zǐ hǎo qiú",
-    "蓬山此去无多路，青鸟殷勤为探看": "péng shān cǐ qù wú duō lù ， qīng niǎo yīn qín wèi tàn kān",
-    "朝辞白帝彩云间，千里江陵一日还": "zhāo cí bái dì cǎi yún jiān ， qiān lǐ jiāng líng yī rì huán",
-    "知者不惑，仁者不忧，勇者不惧": "zhì zhě bù huò ， rén zhě bù yōu ， yǒng zhě bù jù",
+    "拔苗助长": "bá miáo zhù zhǎng",
+    "百发百中": "bǎi fā bǎi zhòng",
+    "班门弄斧": "bān mén nòng fǔ",
+    "杯弓蛇影": "bēi gōng shé yǐng",
+    "杯水车薪": "bēi shuǐ chē xīn",
+    "捕风捉影": "bǔ fēng zhuō yǐng",
+    "对牛弹琴": "duì niú tán qín",
+    "邯郸学步": "hán dān xué bù",
+    "画饼充饥": "huà bǐng chōng jī",
+    "画龙点睛": "huà lóng diǎn jīng",
+    "画蛇添足": "huà shé tiān zú",
+    "鸡鸣狗盗": "jī míng gǒu dào",
+    "井底之蛙": "jǐng dǐ zhī wā",
+    "刻舟求剑": "kè zhōu qiú jiàn",
+    "空中楼阁": "kōng zhōng lóu gé",
+    "滥竽充数": "làn yú chōng shù",
+    "买椟还珠": "mǎi dú huán zhū",
+    "盲人摸象": "máng rén mō xiàng",
+    "南辕北辙": "nán yuán běi zhé",
+    "弄巧成拙": "nòng qiǎo chéng zhuō",
+    "鹏程万里": "péng chéng wàn lǐ",
+    "杞人忧天": "qǐ rén yōu tiān",
+    "骑虎难下": "qí hǔ nán xià",
+    "黔驴技穷": "qián lǘ jì qióng",
+    "请君入瓮": "qǐng jūn rù wèng",
+    "曲突徙薪": "qū tū xǐ xīn",
+    "人面兽心": "rén miàn shòu xīn",
+    "塞翁失马": "sài wēng shī mǎ",
+    "三人成虎": "sān rén chéng hǔ",
+    "守株待兔": "shǒu zhū dài tù",
+    "水滴石穿": "shuǐ dī shí chuān",
+    "螳臂当车": "táng bì dāng chē",
+    "亡羊补牢": "wáng yáng bǔ láo",
+    "望梅止渴": "wàng méi zhǐ kě",
+    "望洋兴叹": "wàng yáng xīng tàn",
+    "闻鸡起舞": "wén jī qǐ wǔ",
+    "卧薪尝胆": "wò xīn cháng dǎn",
+    "叶公好龙": "yè gōng hào lóng",
+    "夜郎自大": "yè láng zì dà",
+    "一鸣惊人": "yī míng jīng rén",
+    "一叶障目": "yī yè zhàng mù",
+    "愚公移山": "yú gōng yí shān",
+    "缘木求鱼": "yuán mù qiú yú",
+    "曾参杀人": "zēng shēn shā rén",
+    "朝三暮四": "zhāo sān mù sì",
+    "郑人买履": "zhèng rén mǎi lǚ",
+    "自相矛盾": "zì xiāng máo dùn",
+    "按图索骥": "àn tú suǒ jì",
+    "抱薪救火": "bào xīn jiù huǒ",
+    "不寒而栗": "bù hán ér lì",
+    "不自量力": "bù zì liàng lì",
+    "沧海桑田": "cāng hǎi sāng tián",
+    "草船借箭": "cǎo chuán jiè jiàn",
+    "差强人意": "chā qiáng rén yì",
+    "乘人之危": "chéng rén zhī wēi",
+    "痴人说梦": "chī rén shuō mèng",
+    "出人头地": "chū rén tóu dì",
+    "初出茅庐": "chū chū máo lú",
+    "唇亡齿寒": "chún wáng chǐ hán",
+    "大公无私": "dà gōng wú sī",
+    "大器晚成": "dà qì wǎn chéng",
+    "道听途说": "dào tīng tú shuō",
+    "得陇望蜀": "dé lǒng wàng shǔ",
+    "东窗事发": "dōng chuāng shì fā",
+    "东施效颦": "dōng shī xiào pín",
+    "独当一面": "dú dāng yī miàn",
+    "防微杜渐": "fáng wēi dù jiàn",
+    "分道扬镳": "fēn dào yáng biāo",
+    "风吹草动": "fēng chuī cǎo dòng",
+    "赴汤蹈火": "fù tāng dǎo huǒ",
+    "覆水难收": "fù shuǐ nán shōu",
+    "狗急跳墙": "gǒu jí tiào qiáng",
+    "管中窥豹": "guǎn zhōng kuī bào",
+    "过河拆桥": "guò hé chāi qiáo",
+    "后来居上": "hòu lái jū shàng",
+    "后生可畏": "hòu shēng kě wèi",
+    "囫囵吞枣": "hú lún tūn zǎo",
+    "狐朋狗友": "hú péng gǒu yǒu",
+    "华而不实": "huá ér bù shí",
+    "鸡飞蛋打": "jī fēi dàn dǎ",
+    "鸡犬升天": "jī quǎn shēng tiān",
+    "寄人篱下": "jì rén lí xià",
+    "家喻户晓": "jiā yù hù xiǎo",
+    "见怪不怪": "jiàn guài bù guài",
+    "狡兔三窟": "jiǎo tù sān kū",
+    "竭泽而渔": "jié zé ér yú",
+    "今非昔比": "jīn fēi xī bǐ",
+    "津津有味": "jīn jīn yǒu wèi",
+    "惊弓之鸟": "jīng gōng zhī niǎo",
+    "居安思危": "jū ān sī wēi",
+    "开卷有益": "kāi juàn yǒu yì",
+    "狼狈为奸": "láng bèi wéi jiān",
+    "老当益壮": "lǎo dāng yì zhuàng",
+    "鹿死谁手": "lù sǐ shuí shǒu",
+    "落井下石": "luò jǐng xià shí",
+    "门可罗雀": "mén kě luó què",
 }
 
 
 def get_pinyin(s):
-    if s in PINYIN_OVERRIDE:
-        return PINYIN_OVERRIDE[s]
-    # 本产品含大量长句民间谚语：长句若走 pypinyin 自动注音，多音字极易读错且拼音冗长无意义。
-    # 策略：仅对汉字数 <= 8 的词条（寓言成语/短谚）生成拼音，超长者返回空（不注音）。
+    """只给「纯四字成语」注音，且必须命中人工核定表；长句谚语/多字典故一律不注音。
+    未命中表则返回空——宁可不注音，也绝不让自动注音产生多音字硬伤。"""
     han = re.findall(r'[\u4e00-\u9fff]', s)
-    if len(han) > 8:
+    if len(s) != 4 or len(han) != 4:
         return ''
-    return ' '.join(p[0] for p in pinyin_fn(s, style=Style.TONE))
+    return PINYIN_OVERRIDE.get(s, '')
 
 
 def data_img(fn):
@@ -102,7 +197,7 @@ state = "intro"
 
 for ln in lines:
     if ln.startswith("# "):
-        title = ln[2:].strip()
+        title = ln[2:].strip().strip("*").strip()
         state = "intro"
         continue
     if ln.strip() == "---":
