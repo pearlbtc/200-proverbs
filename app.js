@@ -403,7 +403,7 @@ try { (function () {
   }
   // ★按产品改：AUDIO_MAX_ID 改为动态取最大 id，免去逐产品手改
   var AUDIO_MAX_ID = ENTRIES.reduce(function (m, e) { return Math.max(m, e.id || 0); }, 0);
-  var AUDIO_V = 1;         // 音频缓存版本：每次重新生成 audio/ 后 +1，破浏览器/微信缓存
+  var AUDIO_V = 2;         // 音频缓存版本：每次重新生成 audio/ 后 +1，破浏览器/微信缓存
   function playRecite(id, text) {
     if (!text && id == null) return;
     var btn = document.getElementById("reciteBtn");

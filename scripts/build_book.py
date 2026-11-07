@@ -317,12 +317,12 @@ body.append(f"""
   <img class="bg" src="{cover_data}">
   <div class="frame"></div>
   <div class="inner">
-    <div class="kicker">诗 词 成 语 · 水 墨 珍 藏</div>
+    <div class="kicker">成 语 典 故 · 民 间 谚 语</div>
     <h1>{esc(title)}</h1>
-    <div class="sub">一词一画 · 水墨珍藏</div>
-    <div class="seal-big">词<br>韵</div>
+    <div class="sub">二百条 · 逐条释读</div>
+    <div class="seal-big">日<br>读</div>
   </div>
-  <div class="foot">电子书珍藏版 · 敬请静读</div>
+  <div class="foot">电子书 · 随手翻读</div>
 </div>
 """)
 
@@ -337,7 +337,7 @@ for si, s in enumerate(sections, 1):
     <div class="no">第 {si} 卷 · 共 {len(sections)} 卷</div>
     <div class="sname">{esc(s['name'])}</div>
     <div class="lead">{lead}</div>
-    <div class="count">本卷收录 {len(s['entries'])} 则 · 以下逐一点评</div>
+    <div class="count">本卷收录 {len(s['entries'])} 条 · 释义与用例见后</div>
   </div>
 </div>
 """)
@@ -361,8 +361,8 @@ for si, s in enumerate(sections, 1):
 
 body.append(f"""
 <div class="ending">
-  <div class="big">六百年诗心<br>藏于此卷</div>
-  <div class="body">愿这一卷水墨，陪你走过每一个想用美来说话的瞬间。</div>
+  <div class="big">二百条<br>随手翻读</div>
+  <div class="body">谚语与典故，都是被反复说过的话。留着，哪天用得上，再翻回来看看。</div>
   <div class="seal-big">终</div>
 </div>
 """)
