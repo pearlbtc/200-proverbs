@@ -3,5 +3,3 @@ package-lock.json
 generated-images/
 核查表.md
 备份_源文件_重排前.md
-# 旧版PDF被预览进程独占锁住，无法覆盖；已改用 千古智慧200句_重排版.pdf
-千古智慧200句.pdf
