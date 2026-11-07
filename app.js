@@ -210,7 +210,7 @@ try { (function () {
     return pool.map(function (e) { return e.id; });
   }
 
-  // 把词条拆成 token，随机挖空（汉字数=4 挖2、=8 挖4，其余挖约半数）
+  // 把词条拆成 token，随机挖空：整条汉字数 ≤8 留 1 个字，>8 留 2 个字
   function makeQuestion(entry) {
     var tokens = [];
     var hanIdx = [];
@@ -219,8 +219,9 @@ try { (function () {
       if (HAN.test(ch)) { tokens.push({ ch: ch, punct: false }); hanIdx.push(tokens.length - 1); }
       else { tokens.push({ ch: ch, punct: true }); }
     }
-    // 填空字数：短词（成语等）保持挖约半数；诗句等较长句子最多挖 4 字，避免长句全空难答
-    var hideCount = Math.min(Math.round(entry.chars / 2), 4);
+    // 填空字数：按整条汉字数（entry.chars，不含标点）决定，短句只留 1 字、长句留 2 字。
+    // 取 min 兜底，避免异常数据下挖空数超过实际汉字数导致答案为空。
+    var hideCount = Math.min(entry.chars <= 8 ? 1 : 2, hanIdx.length);
     var shuffled = hanIdx.slice().sort(function () { return Math.random() - 0.5; });
     var hideSet = {};
     shuffled.slice(0, hideCount).forEach(function (i) { hideSet[i] = true; });
@@ -584,7 +585,7 @@ try { (function () {
     html += '  <div><div class="k">本轮题量</div><div class="v">' + count + " 题</div></div>";
     html += '  <div><div class="k">历史最好</div><div class="v">' + best + " 分</div></div>";
     html += "</div>";
-    html += '<div class="hint">规则：挖空填字，每轮满分 100 分，<b>&#8805;90 分</b>即可晋级下一轮。<br>第1轮用最熟悉常用的词，越往后越难。<br>题目优先出自今日已学内容，全部掌握后从全书随机。</div>';
+    html += '<div class="hint">规则：挖空填字，8 字以内填 1 个字，超过 8 字填 2 个字，每轮满分 100 分，<b>&#8805;90 分</b>即可晋级下一轮。<br>第1轮用最熟悉常用的词，越往后越难。<br>题目优先出自今日已学内容，全部掌握后从全书随机。</div>';
     html += '<div class="card-actions" style="margin-top:20px;flex-direction:column">';
     html += '  <button class="btn btn-primary" id="startBtn" style="font-size:17px;padding:13px 34px">开始第 ' + state.round + " 轮自测</button>";
     html += '  <button class="btn btn-ghost" id="skipBtn" style="font-size:14px;padding:10px 24px;margin-top:8px">跳过测试，直接进入下一组学习</button>';
