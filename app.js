@@ -41,7 +41,11 @@ try { (function () {
   }, 1000);
 
   var HAN = /[一-龥]/;
-  var STORE_KEY = "mjjb_state_v1";
+  // ★数据版本：源文稿一旦增删/重排词条，id↔词条映射就变了，必须 +1 换键。
+  // 收藏 / 已掌握 / 今日已学都按 entryId 存，沿用旧键会把记录串到别的词条上。
+  // 旧键 "mjjb_state_v1" 的数据完整保留不删；需要恢复时用 scripts/legacy_id_map.json 做一次性迁移。
+  var DATA_REV = 2;
+  var STORE_KEY = "qgzh_state_v" + DATA_REV;
   var ROUND_CAP = 300;         // 每轮题量封顶，防离谱
   // 每轮题量：第1轮10题、第2轮20题、第3轮40题、第4轮60题、第5轮100题；第6轮起每轮+40
   var ROUND_TABLE = [10, 20, 40, 60, 100];
