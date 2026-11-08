@@ -1,5 +1,5 @@
 /* 千古智慧200句在线学习小工具 — Service Worker：离线缓存，让网页版在手机上像原生 App 一样可用 */
-const CACHE = "qian-gu-zhi-hui-v4";  // ★按产品改：每次发布改此版本号（如 v2），确保用户立刻拿到新缓存；音频 .mp3 不进 SW 缓存（见 fetch 中 return）
+const CACHE = "qian-gu-zhi-hui-v5";  // ★按产品改：每次发布改此版本号（如 v2），确保用户立刻拿到新缓存；音频 .mp3 不进 SW 缓存（见 fetch 中 return）
 const CORE = [
   "./",
   "index.html",
